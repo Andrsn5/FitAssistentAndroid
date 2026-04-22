@@ -17,6 +17,15 @@ migrate_working_dir/
 *.ipr
 *.iws
 .idea/
+.gradle
+/local.properties
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+.kotlin/*
+local.properties
 
 # The .vscode folder contains launch configuration and tasks you configure in
 # VS Code which you may wish to be included in version control, so this line

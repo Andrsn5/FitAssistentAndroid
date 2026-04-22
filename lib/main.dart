@@ -1,7 +1,9 @@
+import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 void main() {
+  developer.log('🚀 App starting', name: 'MyApp');
   runApp(const MyApp());
 }
 
@@ -11,106 +13,214 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter + Native Counter',
+      title: 'Native Auth Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
         scaffoldBackgroundColor: Colors.black,
       ),
-      home: const MyHomePage(title: 'Native Counter Demo'),
+      home: const AuthPage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
+class AuthPage extends StatefulWidget {
+  const AuthPage({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<AuthPage> createState() => _AuthPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _AuthPageState extends State<AuthPage> {
+  static const MethodChannel _channel = MethodChannel('native_api');
+  static const String _logName = 'AuthPage';
 
-  int _counter = 0;
-  bool _isLoading = false;
-  String? _errorMessage;
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
-  static const MethodChannel _channel = MethodChannel('counter');
+  bool _loading = false;
+  String? _result;
 
-  Future<void> _incrementCounter() async {
-
-    print("FLUTTER: button pressed");
-
+  Future<void> _register() async {
+    developer.log('→ _register called: email=${emailController.text}', name: _logName);
     setState(() {
-      _isLoading = true;
-      _errorMessage = null;
+      _loading = true;
+      _result = null;
     });
 
     try {
-
-      print("FLUTTER: calling native");
-
-      final int? newValue =
-      await _channel.invokeMethod<int>('incrementCounter');
-
-      print("FLUTTER: native returned $newValue");
-
-      setState(() {
-        _counter = newValue ?? 0;
-        _isLoading = false;
+      developer.log('→ Invoking native register...', name: _logName);
+      final res = await _channel.invokeMethod<bool>('register', {
+        "email": emailController.text,
+        "password": passwordController.text,
       });
-
-    } on PlatformException catch (e) {
-
-      print("FLUTTER ERROR: ${e.message}");
+      developer.log('← Native register returned: $res', name: _logName);
 
       setState(() {
-        _errorMessage = e.message;
-        _isLoading = false;
+        _result = res == true ? "REGISTER SUCCESS" : "REGISTER FAILED";
+        _loading = false;
+      });
+    } on PlatformException catch (e) {
+      developer.log('← PlatformException: code=${e.code}, message=${e.message}', name: _logName, error: e);
+      setState(() {
+        _result = "ERROR: ${e.message}";
+        _loading = false;
+      });
+    } catch (e, stack) {
+      developer.log('← Unexpected error: $e', name: _logName, error: e, stackTrace: stack);
+      setState(() {
+        _result = "UNEXPECTED ERROR: $e";
+        _loading = false;
+      });
+    }
+  }
+
+  Future<void> _login() async {
+    developer.log('→ _login called: email=${emailController.text}', name: _logName);
+    setState(() {
+      _loading = true;
+      _result = null;
+    });
+
+    try {
+      developer.log('→ Invoking native login...', name: _logName);
+      final token = await _channel.invokeMethod<String>('login', {
+        "email": emailController.text,
+        "password": passwordController.text,
+      });
+      developer.log('← Native login returned: token=${token != null ? "exists" : "null"}', name: _logName);
+
+      setState(() {
+        _result = token != null ? "TOKEN: $token" : "LOGIN FAILED";
+        _loading = false;
+      });
+    } on PlatformException catch (e) {
+      developer.log('← PlatformException: code=${e.code}, message=${e.message}', name: _logName, error: e);
+      setState(() {
+        _result = "ERROR: ${e.message}";
+        _loading = false;
+      });
+    } catch (e, stack) {
+      developer.log('← Unexpected error: $e', name: _logName, error: e, stackTrace: stack);
+      setState(() {
+        _result = "UNEXPECTED ERROR: $e";
+        _loading = false;
+      });
+    }
+  }
+
+  Future<void> _profile() async {
+    developer.log('→ _profile called', name: _logName);
+    setState(() {
+      _loading = true;
+      _result = null;
+    });
+
+    try {
+      developer.log('→ Invoking native profile...', name: _logName);
+      final profile = await _channel.invokeMethod<String>('profile');
+      developer.log('← Native profile returned: ${profile != null ? "exists" : "null"}', name: _logName);
+
+      setState(() {
+        _result = profile ?? "EMPTY PROFILE";
+        _loading = false;
+      });
+    } on PlatformException catch (e) {
+      developer.log('← PlatformException: code=${e.code}, message=${e.message}', name: _logName, error: e);
+      setState(() {
+        _result = "ERROR: ${e.message}";
+        _loading = false;
+      });
+    } catch (e, stack) {
+      developer.log('← Unexpected error: $e', name: _logName, error: e, stackTrace: stack);
+      setState(() {
+        _result = "UNEXPECTED ERROR: $e";
+        _loading = false;
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-
       appBar: AppBar(
+        title: const Text("Native Auth Demo"),
         backgroundColor: Colors.orange,
-        title: Text(widget.title),
       ),
-
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(16),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-
-            if (_errorMessage != null)
-              Text(
-                _errorMessage!,
-                style: const TextStyle(color: Colors.red, fontSize: 18),
+            TextField(
+              controller: emailController,
+              style: const TextStyle(color: Colors.white),
+              decoration: const InputDecoration(
+                labelText: "Email",
+                labelStyle: TextStyle(color: Colors.orange),
               ),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: passwordController,
+              obscureText: true,
+              style: const TextStyle(color: Colors.white),
+              decoration: const InputDecoration(
+                labelText: "Password",
+                labelStyle: TextStyle(color: Colors.orange),
+              ),
+            ),
+            const SizedBox(height: 20),
 
-            if (_isLoading)
+            if (_loading)
               const CircularProgressIndicator(color: Colors.orange)
             else
-              Text(
-                '$_counter',
-                style: const TextStyle(
-                  fontSize: 60,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
+              Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.orange,
+                        ),
+                        onPressed: _login,
+                        child: const Text("Login"),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.orange,
+                        ),
+                        onPressed: _register,
+                        child: const Text("Register"),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.orange,
+                    ),
+                    onPressed: _profile,
+                    child: const Text("Get Profile"),
+                  ),
+                ],
+              ),
+
+            const SizedBox(height: 30),
+
+            if (_result != null)
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Text(
+                    _result!,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
+                  ),
                 ),
               ),
           ],
         ),
-      ),
-
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.orange,
-        onPressed: _incrementCounter,
-        child: const Icon(Icons.add, color: Colors.black),
       ),
     );
   }
