@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fitassistent/common/fit_buttons.dart';
+import 'package:fitassistent/common/fit_text_field.dart';
 import 'package:fitassistent/theme/app_theme.dart';
-import 'package:fitassistent/theme/platform_colors.dart';
 import 'package:fitassistent/pages/registration_page.dart';
 
 class AuthorizationPage extends StatefulWidget {
@@ -26,19 +27,24 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
   Widget build(BuildContext context) {
     final sizes = context.platformSizes;
     final colors = context.platformColors;
-    final textStyles = context.platformTextStyles;
 
     return Scaffold(
       backgroundColor: colors.authScreenBackground,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+          padding: EdgeInsets.symmetric(
+            horizontal: sizes.authOuterHorizontalPadding,
+            vertical: sizes.authOuterVerticalPadding,
+          ),
           child: SizedBox.expand(
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 28),
+              padding: EdgeInsets.symmetric(
+                horizontal: sizes.authCardHorizontalPadding,
+                vertical: sizes.authCardVerticalPadding,
+              ),
               decoration: BoxDecoration(
                 color: colors.authCardBackground,
-                borderRadius: BorderRadius.circular(28),
+                borderRadius: BorderRadius.circular(sizes.authCardRadius),
               ),
               child: Center(
                 child: SingleChildScrollView(
@@ -51,7 +57,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                         textAlign: TextAlign.center,
                         style: context.platformTextStyles.headerTextStyle,
                       ),
-                      const SizedBox(height: 40),
+                      SizedBox(height: sizes.authTitleToIconSpacing),
                       SizedBox(
                         height: sizes.profileIconSize,
                         child: Center(
@@ -66,22 +72,28 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 40),
-                      _AuthTextField(
+                      SizedBox(height: sizes.authIconToFieldsSpacing),
+                      FitTextField(
                         controller: _emailController,
-                        height: sizes.inputFieldHeight,
                         hintText: 'Введите почту',
-                        colors: colors,
+                        prefix: Icon(
+                          Icons.email_outlined,
+                          size: sizes.commonFieldPrefixIconSize,
+                          color: colors.authHintTextColor,
+                        ),
                       ),
-                      const SizedBox(height: 15),
-                      _AuthTextField(
+                      SizedBox(height: sizes.authFieldsSpacing),
+                      FitTextField(
                         controller: _passwordController,
-                        height: sizes.inputFieldHeight,
                         hintText: 'Введите пароль',
-                        colors: colors,
                         obscureText: true,
+                        prefix: Icon(
+                          Icons.vpn_key_outlined,
+                          size: sizes.commonFieldPrefixIconSize,
+                          color: colors.authHintTextColor,
+                        ),
                       ),
-                      const SizedBox(height: 5),
+                      SizedBox(height: sizes.authForgotSpacing),
                       TextButton(
                         onPressed: () {},
                         style: TextButton.styleFrom(
@@ -92,32 +104,20 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                           style: TextStyle(color: colors.textSecondary),
                         ),
                       ),
-                      SizedBox(
-                        height: sizes.buttonHeight,
-                        child: ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: colors.authPrimaryButtonBackground,
-                            foregroundColor: colors.authPrimaryButtonText,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            elevation: 0,
-                          ),
-                          child: Text(
-                            'Авторизация',
-                            style: textStyles.authPrimaryButtonTextStyle,
-                          ),
-                        ),
+                      FitPrimaryButton(
+                        text: 'Авторизация',
+                        onPressed: () {},
                       ),
-                      const SizedBox(height: 18),
+                      SizedBox(height: sizes.authPrimaryToDividerSpacing),
                       Row(
                         children: [
                           Expanded(
                             child: Divider(color: colors.authDividerColor),
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: sizes.authDividerHorizontalPadding,
+                            ),
                             child: Text(
                               'Нет аккаунта?',
                               style: TextStyle(color: colors.textSecondary),
@@ -128,10 +128,8 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 14),
-                      _AuthSecondaryButton(
-                        height: sizes.navigationButtonHeight,
-                        colors: colors,
+                      SizedBox(height: sizes.authDividerToSecondarySpacing),
+                      FitSecondaryButton(
                         text: 'Создать аккаунт',
                         onPressed: () {
                           Navigator.of(context).push(
@@ -141,20 +139,10 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                           );
                         },
                       ),
-                      const SizedBox(height: 12),
-                      _AuthSecondaryButton(
-                        height: sizes.navigationButtonHeight,
-                        colors: colors,
-                        text: 'Через Telegram',
-                        onPressed: () {},
-                      ),
-                      const SizedBox(height: 12),
-                      _AuthSecondaryButton(
-                        height: sizes.navigationButtonHeight,
-                        colors: colors,
-                        text: 'Через Google',
-                        onPressed: () {},
-                      ),
+                      SizedBox(height: sizes.authSecondaryButtonsSpacing),
+                      FitSecondaryButton(text: 'Через Telegram', onPressed: () {}),
+                      SizedBox(height: sizes.authSecondaryButtonsSpacing),
+                      FitSecondaryButton(text: 'Через Google', onPressed: () {}),
                     ],
                   ),
                 ),
@@ -167,89 +155,4 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
   }
 }
 
-class _AuthTextField extends StatelessWidget {
-  const _AuthTextField({
-    required this.controller,
-    required this.height,
-    required this.hintText,
-    required this.colors,
-    this.obscureText = false,
-  });
 
-  static const double _borderRadius = 16;
-  static const double _horizontalPadding = 16;
-  static const double _verticalPadding = 18;
-
-  final TextEditingController controller;
-  final double height;
-  final String hintText;
-  final PlatformColors colors;
-  final bool obscureText;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: height,
-      child: TextField(
-        controller: controller,
-        obscureText: obscureText,
-        decoration: InputDecoration(
-          hintText: hintText,
-          hintStyle: TextStyle(color: colors.authHintTextColor),
-          isDense: true,
-          filled: true,
-          fillColor: colors.authFieldBackground,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(_borderRadius),
-            borderSide: BorderSide(color: colors.authFieldBorder),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(_borderRadius),
-            borderSide: BorderSide(color: colors.authFieldBorder),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(_borderRadius),
-            borderSide: BorderSide(color: colors.primaryColor, width: 1.5),
-          ),
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: _horizontalPadding,
-            vertical: _verticalPadding,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _AuthSecondaryButton extends StatelessWidget {
-  const _AuthSecondaryButton({
-    required this.height,
-    required this.colors,
-    required this.text,
-    required this.onPressed,
-  });
-
-  final double height;
-  final PlatformColors colors;
-  final String text;
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: height,
-      child: ElevatedButton(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: colors.authSecondaryButtonBackground,
-          foregroundColor: colors.authSecondaryButtonText,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          elevation: 0,
-        ),
-        child: Text(text),
-      ),
-    );
-  }
-}
