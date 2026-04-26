@@ -10,6 +10,7 @@ class PlatformColors {
   final Color border;
 
   final Color headerTextColor;
+  final Color primaryColor;
 
   const PlatformColors({
     required this.colorScheme,
@@ -19,6 +20,7 @@ class PlatformColors {
     required this.textSecondary,
     required this.border,
     required this.headerTextColor,
+    required this.primaryColor,
   });
 
   factory PlatformColors.of(BuildContext context) {
@@ -33,6 +35,7 @@ class PlatformColors {
       textSecondary: theme.textTheme.bodyMedium?.color ?? scheme.onSurface,
       border: scheme.outline,
       headerTextColor: const Color(0xFF000000),
+      primaryColor: theme.primaryColor,
     );
   }
 }
