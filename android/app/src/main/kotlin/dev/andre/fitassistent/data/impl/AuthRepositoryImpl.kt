@@ -23,7 +23,8 @@ class AuthRepositoryImpl(
     private val apiService: ApiService,
     private val dao: ProfileDao,
     private val dataStore: DataStore<Preferences>,
-    private val networkChecker: NetworkChecker
+    private val networkChecker: NetworkChecker,
+    private val profileEntityMapper: ProfileEntityMapper
 ) : AuthRepository {
     override suspend fun register(request: RegisterRequest): Result<Unit> {
         if (!networkChecker.isOnline()) {
@@ -76,7 +77,7 @@ class AuthRepositoryImpl(
             val cached = dao.getProfileSingle()
             return if (cached != null) {
                 Log.d(TAG, "← Profile loaded from cache")
-                Result.success(ProfileEntityMapper().toResponse(cached))
+                Result.success(profileEntityMapper.toResponse(cached))
             } else {
                 Result.failure(NoInternetException())
             }
@@ -98,7 +99,7 @@ class AuthRepositoryImpl(
                 throw Exception("Failed to get profile ${response.code()}")
             }
             response.body()!!.also {
-                dao.insertProfile(ProfileEntityMapper().toEntity(it))
+                dao.insertProfile(profileEntityMapper.toEntity(it))
                 Log.d(TAG, "← Profile saved to cache")
             }
         }.onFailure { e ->

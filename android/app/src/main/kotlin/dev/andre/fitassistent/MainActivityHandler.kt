@@ -50,7 +50,11 @@ class MainActivityHandler(
                     result.success(true)
                 } else {
                     val error = registerResult.exceptionOrNull()
-                    result.error("REGISTER_ERROR", error?.message ?: "Unknown error", null)
+                    if (error is NoInternetException) {
+                        result.error("NO_INTERNET", "Нет подключения к интернету", null)
+                    } else {
+                        result.error("REGISTER_ERROR", error?.message ?: "Unknown error", null)
+                    }
                 }
             }
         }
@@ -67,7 +71,11 @@ class MainActivityHandler(
                     result.success(true)
                 } else {
                     val error = loginResult.exceptionOrNull()
-                    result.error("LOGIN_ERROR", error?.message ?: "Unknown error", null)
+                    if (error is NoInternetException) {
+                        result.error("NO_INTERNET", "Нет подключения к интернету", null)
+                    } else {
+                        result.error("LOGIN_ERROR", error?.message ?: "Unknown error", null)
+                    }
                 }
             }
         }
