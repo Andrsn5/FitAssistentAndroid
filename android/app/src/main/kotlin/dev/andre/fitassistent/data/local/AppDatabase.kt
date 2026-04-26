@@ -6,4 +6,8 @@ import androidx.room.RoomDatabase
 @Database(entities = [ProfileEntity::class], version = 1)
 abstract class AppDatabase : RoomDatabase()  {
     abstract fun profileDao(): ProfileDao
+
+    companion object{
+        const val DATABASE_NAME = "app_database"
+    }
 }
