@@ -1,10 +1,19 @@
 import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fitassistent/theme/dark_theme.dart';
+import 'package:fitassistent/theme/light_theme.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fitassistent/theme/cubit/theme_cubit.dart';
 
 void main() {
   developer.log('🚀 App starting', name: 'MyApp');
-  runApp(const MyApp());
+  runApp(
+    BlocProvider(
+      create: (_) => ThemeCubit(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -12,14 +21,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Native Auth Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
-        scaffoldBackgroundColor: Colors.black,
-      ),
-      home: const AuthPage(),
-      // test commit
+    return BlocBuilder<ThemeCubit, ThemeCubitState>(
+      builder: (context, state) {
+        return MaterialApp(
+          title: 'Native Auth Demo',
+          theme: LightTheme().themeData,
+          darkTheme: DarkTheme().themeData,
+          themeMode: state.themeMode,
+          home: const AuthPage(),
+        );
+      },
     );
   }
 }
@@ -146,6 +157,13 @@ class _AuthPageState extends State<AuthPage> {
       appBar: AppBar(
         title: const Text("Native Auth Demo"),
         backgroundColor: Colors.orange,
+        actions: [
+          IconButton(
+            tooltip: 'Toggle theme',
+            onPressed: () => context.read<ThemeCubit>().toggleThemeMode(),
+            icon: const Icon(Icons.brightness_6),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
