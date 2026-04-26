@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'light_theme.dart';
 import 'dark_theme.dart';
+import 'light_theme.dart';
 import 'platform_colors.dart';
 
 class HeaderTextStyle extends TextStyle {
@@ -31,14 +31,32 @@ class HeaderTextStyle extends TextStyle {
   }
 }
 
+class AuthPrimaryButtonTextStyle extends TextStyle {
+  static const double _fontSize = 16;
+  static const double _lineHeight = 1.0;
+  static const double _letterSpacing = 0.0;
+
+  static TextStyle resolve({Color? color}) {
+    return GoogleFonts.montserrat(
+      fontSize: _fontSize,
+      height: _lineHeight,
+      letterSpacing: _letterSpacing,
+      fontWeight: FontWeight.w700,
+      color: color,
+    );
+  }
+}
+
 @immutable
 class PlatformTextStyles {
   final TextStyle headerTextStyle;
   final TextStyle h2SemiBold;
+  final TextStyle authPrimaryButtonTextStyle;
 
   const PlatformTextStyles({
     required this.headerTextStyle,
     required this.h2SemiBold,
+    required this.authPrimaryButtonTextStyle,
   });
 
   static const double _h2FontSize = 16;
@@ -61,6 +79,9 @@ class PlatformTextStyles {
         color: platformColors.headerTextColor,
       ),
       h2SemiBold: h2SemiBold,
+      authPrimaryButtonTextStyle: AuthPrimaryButtonTextStyle.resolve(
+        color: platformColors.authPrimaryButtonText,
+      ),
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:fitassistent/theme/dark_theme.dart';
 import 'package:fitassistent/theme/light_theme.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fitassistent/theme/cubit/theme_cubit.dart';
+import 'package:fitassistent/pages/authorization_page.dart';
 
 void main() {
   developer.log('🚀 App starting', name: 'MyApp');
@@ -25,10 +26,11 @@ class MyApp extends StatelessWidget {
       builder: (context, state) {
         return MaterialApp(
           title: 'Native Auth Demo',
+          debugShowCheckedModeBanner: false,
           theme: LightTheme().themeData,
           darkTheme: DarkTheme().themeData,
           themeMode: state.themeMode,
-          home: const AuthPage(),
+          home: const AuthorizationPage(),
         );
       },
     );
