@@ -17,6 +17,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.black,
       ),
       home: const MyHomePage(title: 'Native Counter Demo'),
+      // test commit
     );
   }
 }
