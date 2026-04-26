@@ -19,6 +19,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.black,
       ),
       home: const AuthPage(),
+      // test commit
     );
   }
 }
