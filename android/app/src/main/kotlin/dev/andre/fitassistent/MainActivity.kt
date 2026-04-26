@@ -23,16 +23,8 @@ class MainActivity : FlutterActivity(), KoinComponent {
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
             .setMethodCallHandler { call, result ->
                 when (call.method) {
-                    "register" -> handler.handleRegister(
-                        email = call.argument("email")!!,
-                        password = call.argument("password")!!,
-                        result = result
-                    )
-                    "login" -> handler.handleLogin(
-                        email = call.argument("email")!!,
-                        password = call.argument("password")!!,
-                        result = result
-                    )
+                    "register" ->handler.handleRegister(call, result)
+                    "login" -> handler.handleLogin(call, result)
                     "profile" -> handler.handleProfile(result)
                     else -> result.notImplemented()
                 }

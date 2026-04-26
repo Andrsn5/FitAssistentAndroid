@@ -18,5 +18,5 @@ interface ApiService {
     suspend fun login(@Body request: LoginRequest): Response<AuthResponse>
 
     @GET("/api/v1/profile/me")
-    suspend fun getProfile(@Header("Authorization") token: String): Response<ProfileResponse>
+    suspend fun getProfile(): Response<ProfileResponse>
 }

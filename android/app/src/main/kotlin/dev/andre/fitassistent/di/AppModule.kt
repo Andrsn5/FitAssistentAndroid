@@ -8,6 +8,7 @@ import androidx.room.Room
 import dev.andre.fitassistent.BuildConfig
 import dev.andre.fitassistent.MainActivityHandler
 import dev.andre.fitassistent.data.api.ApiService
+import dev.andre.fitassistent.data.api.AuthInterceptor
 import dev.andre.fitassistent.data.impl.AuthRepositoryImpl
 import dev.andre.fitassistent.data.local.AppDatabase
 import dev.andre.fitassistent.data.local.ProfileDao
@@ -26,7 +27,6 @@ import java.util.concurrent.TimeUnit
 import kotlin.coroutines.CoroutineContext
 
 val appModule = module {
-    // Database
     single<AppDatabase> {
         Room.databaseBuilder(
             androidApplication(),
@@ -37,18 +37,20 @@ val appModule = module {
 
     single<ProfileDao> { get<AppDatabase>().profileDao() }
 
-    // Network
     single<HttpLoggingInterceptor> {
         HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
     }
 
+    single { AuthInterceptor(get()) }
+
     single<OkHttpClient> {
         OkHttpClient.Builder()
             .connectTimeout(10, TimeUnit.SECONDS)
             .readTimeout(10, TimeUnit.SECONDS)
             .writeTimeout(10, TimeUnit.SECONDS)
+            .addInterceptor(get<AuthInterceptor>())
             .apply {
                 if (BuildConfig.DEBUG) addInterceptor(get<HttpLoggingInterceptor>())
             }

@@ -38,7 +38,7 @@ class AuthRepositoryImpl(
     override suspend fun login(
         email: String,
         password: String
-    ): Result<AuthResponse> {
+    ): Result<Unit> {
         Log.d(TAG, "→ Login START: email=$email")
         return runCatching {
             val request = LoginRequest(email, password)
@@ -53,7 +53,6 @@ class AuthRepositoryImpl(
             val authResponse: AuthResponse = response.body()!!
             Log.d(TAG, "← Login SUCCESS: token=${authResponse.token.take(20)}...")
             saveToken(authResponse.token)
-            authResponse
         }.onFailure { e ->
             Log.e(TAG, "← Login EXCEPTION: ${e.javaClass.simpleName}: ${e.message}", e)
         }
@@ -69,7 +68,7 @@ class AuthRepositoryImpl(
                 throw Exception("No token found")
             }
             Log.d(TAG, "→ Sending profile request with token: Bearer ${token.take(10)}...")
-            val response = apiService.getProfile("Bearer $token")
+            val response = apiService.getProfile()
             Log.d(TAG, "← Profile response: code=${response.code()}, isSuccessful=${response.isSuccessful}")
             if (!response.isSuccessful || response.body() == null) {
                 val errorBody = response.errorBody()?.string()

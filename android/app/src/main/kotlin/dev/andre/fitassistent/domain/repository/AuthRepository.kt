@@ -6,6 +6,6 @@ import dev.andre.fitassistent.data.dto.RegisterRequest
 
 interface AuthRepository {
     suspend fun register(request: RegisterRequest): Result<Unit>
-    suspend fun login(email: String, password: String): Result<AuthResponse>
+    suspend fun login(email: String, password: String): Result<Unit>
     suspend fun getProfile(): Result<ProfileResponse>
 }
