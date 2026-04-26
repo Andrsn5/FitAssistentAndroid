@@ -10,6 +10,7 @@ plugins {
 android {
     namespace "dev.andre.fitassistent"
     compileSdk 36
+    ndkVersion "28.2.13676358" // remove if its problem just for me
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
@@ -27,7 +28,7 @@ android {
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-debug"
             buildConfigField("boolean", "TESTING", "true")
-            buildConfigField("String", "BASE_URL", "\"hhttp://10.0.2.2:5443/\"")
+            buildConfigField("String", "BASE_URL", "\"http://10.0.2.2:5443/\"") // remove if its problem just for me
         }
 
         release {

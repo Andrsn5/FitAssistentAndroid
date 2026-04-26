@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'platform_colors.dart';
+import 'platform_sizes.dart';
 import 'platform_text_styles.dart';
 
 class LightTheme {
@@ -19,12 +20,15 @@ class LightTheme {
         textSecondary: Color(0xFF333333),
         border: Color(0xFFE0E0E0),
         headerTextColor: _defaultTextColor,
+        primaryColor: Color(0xFF2C2C2C),
       );
 
   PlatformTextStyles get platformTextStyles => PlatformTextStyles.create(
         platformColors: platformColors,
         defaultTextColor: _defaultTextColor,
       );
+
+  PlatformSizes get platformSizes => PlatformSizes.standard();
 
   ThemeData get themeData {
     final colors = platformColors;
