@@ -165,10 +165,29 @@ class _AuthPageState extends State<AuthPage> {
         _loading = false;
       });
     } on PlatformException catch (e) {
+      developer.log('← PlatformException: code=${e.code}, message=${e.message}', name: _logName, error: e);
       setState(() {
-        _result = "ERROR: ${e.message}";
         _loading = false;
+        // Если есть кеш — он придёт как success, сюда попадаем только при реальной ошибке
+        _result = null;
       });
+
+      if (mounted) {
+        final isNoInternet = e.message?.toLowerCase().contains('интернет') ?? false ||
+            e.message!.toLowerCase().contains('internet') ?? false;
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              isNoInternet
+                  ? '📶 Нет подключения к интернету'
+                  : 'Ошибка: ${e.message}',
+            ),
+            backgroundColor: isNoInternet ? Colors.orange : Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
     } catch (e, stack) {
       developer.log('← Unexpected error: $e', name: _logName, error: e, stackTrace: stack);
       setState(() {

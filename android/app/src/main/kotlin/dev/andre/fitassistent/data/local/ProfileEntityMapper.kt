@@ -30,5 +30,14 @@ class ProfileEntityMapper {
         weeklyBudget = dto.weeklyBudget,
         activityLevel = dto.activityLevel
     )
-    
+
+    fun toResponse(entity: ProfileEntity): ProfileResponse = ProfileResponse(
+        name = entity.name,
+        surname = entity.surname,
+        weight = entity.weight,
+        height = entity.height,
+        weeklyBudget = entity.weeklyBudget,
+        activityLevel = entity.activityLevel
+    )
+
 }

@@ -2,6 +2,7 @@ package dev.andre.fitassistent
 
 import dev.andre.fitassistent.data.dto.RegisterRequest
 import dev.andre.fitassistent.domain.repository.AuthRepository
+import dev.andre.fitassistent.util.NoInternetException
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import kotlinx.coroutines.CoroutineScope
@@ -74,15 +75,17 @@ class MainActivityHandler(
 
     fun handleProfile(result: MethodChannel.Result) {
         scope.launch {
-            runCatching {
-                authRepository.getProfile()
-            }.onSuccess { response ->
-                withContext(Dispatchers.Main) {
-                    result.success(response.getOrNull()?.toString())
-                }
-            }.onFailure { e ->
-                withContext(Dispatchers.Main) {
-                    result.error("PROFILE_ERROR", e.message, null)
+            val profileResult = authRepository.getProfile()
+            withContext(Dispatchers.Main) {
+                if (profileResult.isSuccess) {
+                    result.success(profileResult.getOrNull()?.toString())
+                } else {
+                    val error = profileResult.exceptionOrNull()
+                    if (error is NoInternetException) {
+                        result.error("NO_INTERNET", "Нет подключения к интернету", null)
+                    } else {
+                        result.error("PROFILE_ERROR", error?.message ?: "Unknown error", null)
+                    }
                 }
             }
         }

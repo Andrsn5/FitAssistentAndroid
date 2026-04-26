@@ -13,6 +13,7 @@ import dev.andre.fitassistent.data.impl.AuthRepositoryImpl
 import dev.andre.fitassistent.data.local.AppDatabase
 import dev.andre.fitassistent.data.local.ProfileDao
 import dev.andre.fitassistent.domain.repository.AuthRepository
+import dev.andre.fitassistent.util.NetworkChecker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -36,6 +37,8 @@ val appModule = module {
     }
 
     single<ProfileDao> { get<AppDatabase>().profileDao() }
+
+    single { NetworkChecker(androidApplication()) }
 
     single<HttpLoggingInterceptor> {
         HttpLoggingInterceptor().apply {
@@ -73,7 +76,8 @@ val appModule = module {
         AuthRepositoryImpl(
             apiService = get(),
             dao = get(),
-            dataStore = get()
+            dataStore = get(),
+            networkChecker = get()
         )
     }
 

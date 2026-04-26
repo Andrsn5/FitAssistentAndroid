@@ -13,6 +13,8 @@ import dev.andre.fitassistent.data.dto.RegisterRequest
 import dev.andre.fitassistent.data.local.ProfileDao
 import dev.andre.fitassistent.data.local.ProfileEntityMapper
 import dev.andre.fitassistent.domain.repository.AuthRepository
+import dev.andre.fitassistent.util.NetworkChecker
+import dev.andre.fitassistent.util.NoInternetException
 import kotlinx.coroutines.flow.first
 
 private const val TAG = "AuthRepository"
@@ -20,9 +22,13 @@ private const val TAG = "AuthRepository"
 class AuthRepositoryImpl(
     private val apiService: ApiService,
     private val dao: ProfileDao,
-    private val dataStore: DataStore<Preferences>
+    private val dataStore: DataStore<Preferences>,
+    private val networkChecker: NetworkChecker
 ) : AuthRepository {
     override suspend fun register(request: RegisterRequest): Result<Unit> {
+        if (!networkChecker.isOnline()) {
+            return Result.failure(NoInternetException())
+        }
         Log.d(TAG, "→ Register START: email=${request.email}")
         return runCatching {
             val response = apiService.register(request)
@@ -39,6 +45,9 @@ class AuthRepositoryImpl(
         email: String,
         password: String
     ): Result<Unit> {
+        if (!networkChecker.isOnline()) {
+            return Result.failure(NoInternetException())
+        }
         Log.d(TAG, "→ Login START: email=$email")
         return runCatching {
             val request = LoginRequest(email, password)
@@ -60,6 +69,19 @@ class AuthRepositoryImpl(
 
     override suspend fun getProfile(): Result<ProfileResponse> {
         Log.d(TAG, "→ GetProfile START")
+        
+        // Если нет интернета — возвращаем кеш из БД
+        if (!networkChecker.isOnline()) {
+            Log.d(TAG, "→ Offline mode — loading from cache")
+            val cached = dao.getProfileSingle()
+            return if (cached != null) {
+                Log.d(TAG, "← Profile loaded from cache")
+                Result.success(ProfileEntityMapper().toResponse(cached))
+            } else {
+                Result.failure(NoInternetException())
+            }
+        }
+
         return runCatching {
             val token = getToken()
             Log.d(TAG, "→ Token retrieved: ${if (token != null) "exists" else "NULL"}")
@@ -73,13 +95,11 @@ class AuthRepositoryImpl(
             if (!response.isSuccessful || response.body() == null) {
                 val errorBody = response.errorBody()?.string()
                 Log.e(TAG, "← Profile FAILED: code=${response.code()}, errorBody=$errorBody")
-                throw Exception("Failed to get profile ${response.code()} - $errorBody")
+                throw Exception("Failed to get profile ${response.code()}")
             }
-            Log.d(TAG, "← Profile SUCCESS: ${response.body()}")
             response.body()!!.also {
-                val entity = ProfileEntityMapper().toEntity(response.body()!!)
-                dao.insertProfile(entity)
-                Log.d(TAG, "← Profile insert db")
+                dao.insertProfile(ProfileEntityMapper().toEntity(it))
+                Log.d(TAG, "← Profile saved to cache")
             }
         }.onFailure { e ->
             Log.e(TAG, "← Profile EXCEPTION: ${e.javaClass.simpleName}: ${e.message}", e)
