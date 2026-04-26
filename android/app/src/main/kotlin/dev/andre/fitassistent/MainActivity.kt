@@ -26,6 +26,7 @@ class MainActivity : FlutterActivity(), KoinComponent {
                     "register" ->handler.handleRegister(call, result)
                     "login" -> handler.handleLogin(call, result)
                     "profile" -> handler.handleProfile(result)
+                    "getAIDelish" -> handler.handleGetAIDelish( result)
                     else -> result.notImplemented()
                 }
             }

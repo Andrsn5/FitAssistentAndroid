@@ -199,6 +199,63 @@ class _AuthPageState extends State<AuthPage> {
     }
   }
 
+  Future<void> _getAIDelish() async {
+    setState(() {
+      _loading = true;
+      _result = null;
+    });
+
+    try {
+      final dynamic response = await _channel.invokeMethod('getAIDelish');
+
+      // response это List<dynamic> где каждый элемент Map
+      final List<dynamic> rawList = response as List<dynamic>;
+
+      final list = rawList.map((item) {
+        final map = item as Map<dynamic, dynamic>;
+        return {
+          'id': map['id'],
+          'products': (map['products'] as List<dynamic>).cast<String>(),
+          'calories': map['calories'],
+          'protein': map['protein'],
+          'fats': map['fats'],
+          'carbohydrates': map['carbohydrates'],
+          'cost': map['cost'],
+        };
+      }).toList();
+
+      setState(() {
+        _result = list.map((d) =>
+        'Калории: ${d['calories']}\n'
+            'Продукты: ${(d['products'] as List).join(', ')}\n'
+            'Белки: ${d['protein']} | Жиры: ${d['fats']} | Углеводы: ${d['carbohydrates']}\n'
+            'Стоимость: ${d['cost']} руб.\n'
+        ).join('\n---\n');
+        _loading = false;
+      });
+    } on PlatformException catch (e) {
+      setState(() { _loading = false; });
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              e.code == 'NO_INTERNET'
+                  ? '📶 Нет подключения к интернету'
+                  : 'Ошибка: ${e.message}',
+            ),
+            backgroundColor: e.code == 'NO_INTERNET' ? Colors.orange : Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+    } catch (e) {
+      setState(() {
+        _result = "UNEXPECTED ERROR: $e";
+        _loading = false;
+      });
+    }
+  }
+
   Widget _buildTextField({
     required TextEditingController controller,
     required String label,

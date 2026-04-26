@@ -5,9 +5,13 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
+import dev.andre.fitassistent.data.local.AIDelishDao
+import dev.andre.fitassistent.data.local.AIDelishEntityMapper
 import dev.andre.fitassistent.data.local.AppDatabase
 import dev.andre.fitassistent.data.local.ProfileDao
 import dev.andre.fitassistent.data.local.ProfileEntityMapper
+import dev.andre.fitassistent.data.mapper.ProfileMapper
+import dev.andre.fitassistent.data.validator.AIDelishValidator
 import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module
 
@@ -21,8 +25,12 @@ val dataModule = module {
     }
 
     single<ProfileDao> { get<AppDatabase>().profileDao() }
+    single<AIDelishDao> { get<AppDatabase>().aiDelishDao() }
 
     single<ProfileEntityMapper> { ProfileEntityMapper() }
+    single<AIDelishValidator> { AIDelishValidator() }
+    single<AIDelishEntityMapper> { AIDelishEntityMapper() }
+    single<ProfileMapper> { ProfileMapper() }
 
     single<DataStore<Preferences>> {
         androidApplication().applicationContext.dataStore

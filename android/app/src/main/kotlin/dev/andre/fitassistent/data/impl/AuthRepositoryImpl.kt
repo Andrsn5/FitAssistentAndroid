@@ -12,6 +12,8 @@ import dev.andre.fitassistent.data.dto.ProfileResponse
 import dev.andre.fitassistent.data.dto.RegisterRequest
 import dev.andre.fitassistent.data.local.ProfileDao
 import dev.andre.fitassistent.data.local.ProfileEntityMapper
+import dev.andre.fitassistent.data.mapper.ProfileMapper
+import dev.andre.fitassistent.domain.model.Profile
 import dev.andre.fitassistent.domain.repository.AuthRepository
 import dev.andre.fitassistent.util.NetworkChecker
 import dev.andre.fitassistent.util.NoInternetException
@@ -24,7 +26,8 @@ class AuthRepositoryImpl(
     private val dao: ProfileDao,
     private val dataStore: DataStore<Preferences>,
     private val networkChecker: NetworkChecker,
-    private val profileEntityMapper: ProfileEntityMapper
+    private val profileEntityMapper: ProfileEntityMapper,
+    private val profileMapper: ProfileMapper
 ) : AuthRepository {
     override suspend fun register(request: RegisterRequest): Result<Unit> {
         if (!networkChecker.isOnline()) {
@@ -68,7 +71,7 @@ class AuthRepositoryImpl(
         }
     }
 
-    override suspend fun getProfile(): Result<ProfileResponse> {
+    override suspend fun getProfile(): Result<Profile> {
         Log.d(TAG, "→ GetProfile START")
         
         // Если нет интернета — возвращаем кеш из БД
@@ -77,7 +80,7 @@ class AuthRepositoryImpl(
             val cached = dao.getProfileSingle()
             return if (cached != null) {
                 Log.d(TAG, "← Profile loaded from cache")
-                Result.success(profileEntityMapper.toResponse(cached))
+                Result.success(profileEntityMapper.toDomain(cached))
             } else {
                 Result.failure(NoInternetException())
             }
@@ -98,10 +101,13 @@ class AuthRepositoryImpl(
                 Log.e(TAG, "← Profile FAILED: code=${response.code()}, errorBody=$errorBody")
                 throw Exception("Failed to get profile ${response.code()}")
             }
-            response.body()!!.also {
-                dao.insertProfile(profileEntityMapper.toEntity(it))
-                Log.d(TAG, "← Profile saved to cache")
-            }
+            val profileResponse = response.body()!!
+            val profile = profileMapper.toDomain(profileResponse)
+
+            dao.insertProfile(profileEntityMapper.toEntity(profileResponse))
+            Log.d(TAG, "← Profile saved to cache")
+
+            profile
         }.onFailure { e ->
             Log.e(TAG, "← Profile EXCEPTION: ${e.javaClass.simpleName}: ${e.message}", e)
         }

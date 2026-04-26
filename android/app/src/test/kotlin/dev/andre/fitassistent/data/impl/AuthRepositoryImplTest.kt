@@ -11,6 +11,7 @@ import dev.andre.fitassistent.data.dto.RegisterRequest
 import dev.andre.fitassistent.data.local.ProfileDao
 import dev.andre.fitassistent.data.local.ProfileEntity
 import dev.andre.fitassistent.data.local.ProfileEntityMapper
+import dev.andre.fitassistent.data.mapper.ProfileMapper
 import dev.andre.fitassistent.util.NetworkChecker
 import dev.andre.fitassistent.util.NoInternetException
 import io.mockk.Runs
@@ -46,6 +47,7 @@ class AuthRepositoryImplTest {
     private lateinit var dataStore: DataStore<Preferences>
     private lateinit var networkChecker: NetworkChecker
     private lateinit var profileEntityMapper: ProfileEntityMapper
+    private lateinit var profileMapper: ProfileMapper
 
     private val testDispatcher = UnconfinedTestDispatcher()
 
@@ -62,13 +64,15 @@ class AuthRepositoryImplTest {
         dataStore = mockk(relaxed = true)
         networkChecker = mockk()
         profileEntityMapper = ProfileEntityMapper()
+        profileMapper = ProfileMapper()
 
         authRepository = AuthRepositoryImpl(
             apiService = apiService,
             dao = dao,
             dataStore = dataStore,
             networkChecker = networkChecker,
-            profileEntityMapper = profileEntityMapper
+            profileEntityMapper = profileEntityMapper,
+            profileMapper = profileMapper
         )
     }
 

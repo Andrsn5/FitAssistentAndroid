@@ -1,7 +1,9 @@
 package dev.andre.fitassistent.data.api
 
 import dev.andre.fitassistent.data.dto.AuthResponse
+import dev.andre.fitassistent.data.dto.DelishResponse
 import dev.andre.fitassistent.data.dto.LoginRequest
+import dev.andre.fitassistent.data.dto.ProfileRequest
 import dev.andre.fitassistent.data.dto.ProfileResponse
 import dev.andre.fitassistent.data.dto.RegisterRequest
 import retrofit2.Response
@@ -19,4 +21,7 @@ interface ApiService {
 
     @GET("/api/v1/profile/me")
     suspend fun getProfile(): Response<ProfileResponse>
+
+    @POST("/api/v1/ai/generate")
+    suspend fun getAIDelish(@Body request: ProfileRequest): Response<List<DelishResponse>>
 }

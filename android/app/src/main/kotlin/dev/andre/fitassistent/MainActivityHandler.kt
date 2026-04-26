@@ -1,6 +1,7 @@
 package dev.andre.fitassistent
 
 import dev.andre.fitassistent.data.dto.RegisterRequest
+import dev.andre.fitassistent.domain.repository.AIDelishRepository
 import dev.andre.fitassistent.domain.repository.AuthRepository
 import dev.andre.fitassistent.util.NoInternetException
 import io.flutter.plugin.common.MethodCall
@@ -13,6 +14,7 @@ import kotlinx.coroutines.withContext
 
 class MainActivityHandler(
     private val authRepository: AuthRepository,
+    private val aiDelishRepository: AIDelishRepository,
     private val scope: CoroutineScope
 ) {
 
@@ -93,6 +95,36 @@ class MainActivityHandler(
                         result.error("NO_INTERNET", "Нет подключения к интернету", null)
                     } else {
                         result.error("PROFILE_ERROR", error?.message ?: "Unknown error", null)
+                    }
+                }
+            }
+        }
+    }
+
+    fun handleGetAIDelish(result: MethodChannel.Result) {
+        scope.launch {
+            val aIDelishListResult = aiDelishRepository.getAIDelish()
+            withContext(Dispatchers.Main) {
+                if (aIDelishListResult.isSuccess) {
+                    val list = aIDelishListResult.getOrNull() ?: emptyList()
+                    val mapped = list.map { delish ->
+                        mapOf(
+                            "id" to delish.id,
+                            "products" to delish.products,
+                            "calories" to delish.calories,
+                            "protein" to delish.protein,
+                            "fats" to delish.fats,
+                            "carbohydrates" to delish.carbohydrates,
+                            "cost" to delish.cost
+                        )
+                    }
+                    result.success(mapped)
+                } else {
+                    val error = aIDelishListResult.exceptionOrNull()
+                    if (error is NoInternetException) {
+                        result.error("NO_INTERNET", "Нет подключения к интернету", null)
+                    } else {
+                        result.error("AIDELISH_ERROR", error?.message ?: "Unknown error", null)
                     }
                 }
             }

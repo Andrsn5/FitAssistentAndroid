@@ -11,6 +11,7 @@ val presentationModule = module {
     single {
         MainActivityHandler(
             authRepository = get(),
+            aiDelishRepository = get(),
             scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
         )
     }
