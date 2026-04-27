@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fitassistent/theme/app_theme.dart';
 
 class FitTextField extends StatelessWidget {
@@ -8,6 +9,9 @@ class FitTextField extends StatelessWidget {
     required this.hintText,
     this.obscureText = false,
     this.keyboardType,
+    this.textInputAction,
+    this.maxLength,
+    this.inputFormatters,
     this.height,
     this.prefix,
   });
@@ -17,6 +21,9 @@ class FitTextField extends StatelessWidget {
   final String hintText;
   final bool obscureText;
   final TextInputType? keyboardType;
+  final TextInputAction? textInputAction;
+  final int? maxLength;
+  final List<TextInputFormatter>? inputFormatters;
   final double? height;
   final Widget? prefix;
 
@@ -31,6 +38,9 @@ class FitTextField extends StatelessWidget {
         controller: controller,
         obscureText: obscureText,
         keyboardType: keyboardType,
+        textInputAction: textInputAction,
+        maxLength: maxLength,
+        inputFormatters: inputFormatters,
         decoration: InputDecoration(
           prefixIcon: prefix == null
               ? null
@@ -77,6 +87,7 @@ class FitTextField extends StatelessWidget {
             horizontal: sizes.commonFieldHorizontalPadding,
             vertical: sizes.commonFieldVerticalPadding,
           ),
+          counterText: '',
         ),
       ),
     );

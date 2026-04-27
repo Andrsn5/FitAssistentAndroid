@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fitassistent/common/fit_text_field.dart';
 import 'package:fitassistent/theme/app_theme.dart';
+import 'package:fitassistent/validators/input_constraints.dart';
 
 class OnboardingBudgetStep extends StatelessWidget {
   const OnboardingBudgetStep({
@@ -57,6 +58,9 @@ class OnboardingBudgetStep extends StatelessWidget {
                 controller: budgetController,
                 hintText: '',
                 keyboardType: TextInputType.number,
+                textInputAction: TextInputAction.done,
+                maxLength: InputConstraints.budgetMaxLength,
+                inputFormatters: [InputConstraints.digitsOnlyFormatter],
               ),
               SizedBox(height: sizes.onboardingBudgetAfterFieldSpacing),
               Container(

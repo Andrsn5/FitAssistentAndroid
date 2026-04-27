@@ -17,6 +17,7 @@ class DarkTheme {
   static const Color _authPrimaryButtonText = Color(0xFF000000);
   static const Color _authSecondaryButtonBackground = Color(0xFF1F1F1F);
   static const Color _authSecondaryButtonText = Color(0xFFFFFFFF);
+  static const Color _authSocialButtonBackground = Color(0xFF181818);
   static const Color _recomendationBlockBackground = Color(0xFF1F1F1F);
 
   PlatformColors get platformColors => const PlatformColors(
@@ -43,6 +44,7 @@ class DarkTheme {
         authPrimaryButtonText: _authPrimaryButtonText,
         authSecondaryButtonBackground: _authSecondaryButtonBackground,
         authSecondaryButtonText: _authSecondaryButtonText,
+        authSocialButtonBackground: _authSocialButtonBackground,
         recomendationBlockBackground: _recomendationBlockBackground,
       );
 

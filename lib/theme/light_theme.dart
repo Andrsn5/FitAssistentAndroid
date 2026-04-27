@@ -17,6 +17,7 @@ class LightTheme {
   static const Color _authPrimaryButtonText = Color(0xFFFFFFFF);
   static const Color _authSecondaryButtonBackground = Color(0xFFEDEDED);
   static const Color _authSecondaryButtonText = Color(0xFF2C2C2C);
+  static const Color _authSocialButtonBackground = Color(0xFFE2E2E2);
   static const Color _recomendationBlockBackground = Color(0xFFE6E6E6);
 
   PlatformColors get platformColors => const PlatformColors(
@@ -43,6 +44,7 @@ class LightTheme {
         authPrimaryButtonText: _authPrimaryButtonText,
         authSecondaryButtonBackground: _authSecondaryButtonBackground,
         authSecondaryButtonText: _authSecondaryButtonText,
+        authSocialButtonBackground: _authSocialButtonBackground,
         recomendationBlockBackground: _recomendationBlockBackground,
       );
 

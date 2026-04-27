@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fitassistent/common/fit_buttons.dart';
 import 'package:fitassistent/common/fit_text_field.dart';
+import 'package:fitassistent/common/fit_top_notice.dart';
+import 'package:fitassistent/common/native_auth_api.dart';
 import 'package:fitassistent/theme/app_theme.dart';
 import 'package:fitassistent/pages/registration_page.dart';
+import 'package:fitassistent/validators/input_constraints.dart';
 
 class AuthorizationPage extends StatefulWidget {
   const AuthorizationPage({super.key});
@@ -15,12 +18,53 @@ class AuthorizationPage extends StatefulWidget {
 class _AuthorizationPageState extends State<AuthorizationPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _loading = false;
+
+  static const String _fillFieldsMessage = 'Заполните почту и пароль';
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  Future<void> _login() async {
+    if (_loading) return;
+    setState(() => _loading = true);
+
+    try {
+      final token = await NativeAuthApi.login(
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+      );
+
+      if (!mounted) return;
+
+      if (token == null || token.isEmpty) {
+        showFitTopNotice(
+          context,
+          text: 'Авторизация не удалась',
+          icon: Icons.error_outline,
+        );
+        return;
+      }
+
+      showFitTopNotice(
+        context,
+        text: 'Вы успешно авторизовались',
+        icon: Icons.check_circle_outline,
+      );
+    } on Exception catch (e) {
+      if (!mounted) return;
+      showFitTopNotice(
+        context,
+        text: 'Ошибка при авторизации: $e',
+        icon: Icons.error_outline,
+      );
+    } finally {
+      if (mounted) setState(() => _loading = false);
+    }
   }
 
   @override
@@ -76,6 +120,13 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                       FitTextField(
                         controller: _emailController,
                         hintText: 'Введите почту',
+                        keyboardType: TextInputType.emailAddress,
+                        textInputAction: TextInputAction.next,
+                        maxLength: InputConstraints.emailMaxLength,
+                        inputFormatters: [
+                          InputConstraints.emailFormatter,
+                          InputConstraints.denyWhitespaceFormatter,
+                        ],
                         prefix: Icon(
                           Icons.email_outlined,
                           size: sizes.commonFieldPrefixIconSize,
@@ -87,6 +138,12 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                         controller: _passwordController,
                         hintText: 'Введите пароль',
                         obscureText: true,
+                        textInputAction: TextInputAction.done,
+                        maxLength: InputConstraints.passwordMaxLength,
+                        inputFormatters: [
+                          InputConstraints.passwordFormatter,
+                          InputConstraints.denyWhitespaceFormatter,
+                        ],
                         prefix: Icon(
                           Icons.vpn_key_outlined,
                           size: sizes.commonFieldPrefixIconSize,
@@ -119,7 +176,36 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                       //     // style: TextStyle(color: colors.textSecondary),
                       //   ),
                       // ),
-                      FitPrimaryButton(text: 'Авторизация', onPressed: () {}),
+                      AnimatedBuilder(
+                        animation: Listenable.merge(
+                          [_emailController, _passwordController],
+                        ),
+                        builder: (context, _) {
+                          final canSubmit =
+                              _emailController.text.trim().isNotEmpty &&
+                              _passwordController.text.trim().isNotEmpty;
+
+                          return FitPrimaryButton(
+                            text: _loading ? 'Загрузка...' : 'Авторизация',
+                            enabled: !_loading && canSubmit,
+                            onDisabledPressed: () {
+                              if (_loading) return;
+                              if (_emailController.text.trim().isNotEmpty &&
+                                  _passwordController.text
+                                      .trim()
+                                      .isNotEmpty) {
+                                _login();
+                                return;
+                              }
+                              showFitTopNotice(
+                                context,
+                                text: _fillFieldsMessage,
+                              );
+                            },
+                            onPressed: _login,
+                          );
+                        },
+                      ),
                       SizedBox(height: sizes.authPrimaryToDividerSpacing),
                       Row(
                         children: [
@@ -160,7 +246,14 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                           height: sizes.authSocialIconSize,
                           fit: BoxFit.contain,
                         ),
-                        onPressed: () {},
+                        backgroundColor: colors.authSocialButtonBackground,
+                        onPressed: () {
+                          showFitTopNotice(
+                            context,
+                            text: 'Функция временно недоступна',
+                            icon: Icons.info_outline,
+                          );
+                        },
                       ),
                       SizedBox(height: sizes.authSecondaryButtonsSpacing),
                       FitSecondaryButton(
@@ -171,7 +264,14 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                           height: sizes.authSocialIconSize,
                           fit: BoxFit.contain,
                         ),
-                        onPressed: () {},
+                        backgroundColor: colors.authSocialButtonBackground,
+                        onPressed: () {
+                          showFitTopNotice(
+                            context,
+                            text: 'Функция временно недоступна',
+                            icon: Icons.info_outline,
+                          );
+                        },
                       ),
                     ],
                   ),

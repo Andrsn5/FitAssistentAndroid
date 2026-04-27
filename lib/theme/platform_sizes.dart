@@ -17,6 +17,14 @@ class PlatformSizes {
   static const double _commonFieldPrefixIconGap = 10;
   static const double _authForgotVerticalPadding = 20;
   static const double _commonFieldPrefixIconDy = -1;
+  static const double _commonTopNoticeHorizontalMargin = 16;
+  static const double _commonTopNoticeVerticalPadding = 12;
+  static const double _commonTopNoticeHorizontalPadding = 14;
+  static const double _commonTopNoticeRadius = 16;
+  static const double _commonTopNoticeTopOffset = 12;
+  static const double _commonTopNoticeIconSize = 18;
+  static const double _commonTopNoticeIconGap = 8;
+  static const int _commonTopNoticeAnimationMs = 160;
 
   // Auth / Registration pages
   static const double _authOuterHorizontalPadding = 20;
@@ -93,6 +101,14 @@ class PlatformSizes {
   final double commonFieldPrefixIconSize;
   final double commonFieldPrefixIconGap;
   final double commonFieldPrefixIconDy;
+  final double commonTopNoticeHorizontalMargin;
+  final double commonTopNoticeVerticalPadding;
+  final double commonTopNoticeHorizontalPadding;
+  final double commonTopNoticeRadius;
+  final double commonTopNoticeTopOffset;
+  final double commonTopNoticeIconSize;
+  final double commonTopNoticeIconGap;
+  final int commonTopNoticeAnimationMs;
 
   // Auth / Registration pages
   final double authOuterHorizontalPadding;
@@ -170,6 +186,14 @@ class PlatformSizes {
     required this.commonFieldPrefixIconSize,
     required this.commonFieldPrefixIconGap,
     required this.commonFieldPrefixIconDy,
+    required this.commonTopNoticeHorizontalMargin,
+    required this.commonTopNoticeVerticalPadding,
+    required this.commonTopNoticeHorizontalPadding,
+    required this.commonTopNoticeRadius,
+    required this.commonTopNoticeTopOffset,
+    required this.commonTopNoticeIconSize,
+    required this.commonTopNoticeIconGap,
+    required this.commonTopNoticeAnimationMs,
     required this.authOuterHorizontalPadding,
     required this.authOuterVerticalPadding,
     required this.authCardHorizontalPadding,
@@ -232,6 +256,14 @@ class PlatformSizes {
       commonFieldPrefixIconSize: _commonFieldPrefixIconSize,
       commonFieldPrefixIconGap: _commonFieldPrefixIconGap,
       commonFieldPrefixIconDy: _commonFieldPrefixIconDy,
+      commonTopNoticeHorizontalMargin: _commonTopNoticeHorizontalMargin,
+      commonTopNoticeVerticalPadding: _commonTopNoticeVerticalPadding,
+      commonTopNoticeHorizontalPadding: _commonTopNoticeHorizontalPadding,
+      commonTopNoticeRadius: _commonTopNoticeRadius,
+      commonTopNoticeTopOffset: _commonTopNoticeTopOffset,
+      commonTopNoticeIconSize: _commonTopNoticeIconSize,
+      commonTopNoticeIconGap: _commonTopNoticeIconGap,
+      commonTopNoticeAnimationMs: _commonTopNoticeAnimationMs,
       authOuterHorizontalPadding: _authOuterHorizontalPadding,
       authOuterVerticalPadding: _authOuterVerticalPadding,
       authCardHorizontalPadding: _authCardHorizontalPadding,

@@ -23,6 +23,7 @@ class PlatformColors {
   final Color authPrimaryButtonText;
   final Color authSecondaryButtonBackground;
   final Color authSecondaryButtonText;
+  final Color authSocialButtonBackground;
 
   final Color recomendationBlockBackground;
 
@@ -46,6 +47,7 @@ class PlatformColors {
     required this.authPrimaryButtonText,
     required this.authSecondaryButtonBackground,
     required this.authSecondaryButtonText,
+    required this.authSocialButtonBackground,
     required this.recomendationBlockBackground,
   });
 
@@ -73,6 +75,7 @@ class PlatformColors {
       authPrimaryButtonText: scheme.onPrimary,
       authSecondaryButtonBackground: scheme.surfaceContainerHighest,
       authSecondaryButtonText: scheme.onSurface,
+      authSocialButtonBackground: scheme.surfaceContainerHighest,
       recomendationBlockBackground: scheme.surfaceContainerHighest,
     );
   }

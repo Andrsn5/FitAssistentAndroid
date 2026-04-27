@@ -3,6 +3,7 @@ import 'package:fitassistent/common/fit_buttons.dart';
 import 'package:fitassistent/pages/onboarding/onboarding_models.dart';
 import 'package:fitassistent/pages/onboarding/widgets/onboarding_labeled_field.dart';
 import 'package:fitassistent/theme/app_theme.dart';
+import 'package:fitassistent/validators/input_constraints.dart';
 
 class OnboardingAboutStep extends StatelessWidget {
   const OnboardingAboutStep({
@@ -56,18 +57,30 @@ class OnboardingAboutStep extends StatelessWidget {
                 label: 'Ваш рост',
                 controller: heightController,
                 hintText: 'Рост(см)',
+                keyboardType: TextInputType.number,
+                textInputAction: TextInputAction.next,
+                maxLength: InputConstraints.heightMaxLength,
+                inputFormatters: [InputConstraints.digitsOnlyFormatter],
               ),
               SizedBox(height: sizes.onboardingAboutFieldSpacing),
               OnboardingLabeledField(
                 label: 'Ваш вес',
                 controller: weightController,
                 hintText: 'Вес(кг)',
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                textInputAction: TextInputAction.next,
+                maxLength: InputConstraints.weightMaxLength,
+                inputFormatters: [InputConstraints.decimalNumberFormatter],
               ),
               SizedBox(height: sizes.onboardingAboutFieldSpacing),
               OnboardingLabeledField(
                 label: 'Ваш возраст',
                 controller: ageController,
                 hintText: 'Возраст (лет)',
+                keyboardType: TextInputType.number,
+                textInputAction: TextInputAction.done,
+                maxLength: InputConstraints.ageMaxLength,
+                inputFormatters: [InputConstraints.digitsOnlyFormatter],
               ),
               SizedBox(height: sizes.onboardingBudgetBlockTopSpacing),
               Row(

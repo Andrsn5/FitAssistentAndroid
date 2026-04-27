@@ -1,6 +1,7 @@
 import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fitassistent/common/fit_top_notice.dart';
 import 'package:fitassistent/theme/dark_theme.dart';
 import 'package:fitassistent/theme/light_theme.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -128,7 +129,7 @@ class _AuthPageState extends State<AuthPage> {
     });
 
     try {
-      // invokeMethod<dynamic> чтобы не падать на типах
+      // Use invokeMethod<dynamic> to avoid type issues.
       final dynamic token = await _channel.invokeMethod('login', {
         "email": emailController.text,
         "password": passwordController.text,
@@ -170,24 +171,18 @@ class _AuthPageState extends State<AuthPage> {
       developer.log('← PlatformException: code=${e.code}, message=${e.message}', name: _logName, error: e);
       setState(() {
         _loading = false;
-        // Если есть кеш — он придёт как success, сюда попадаем только при реальной ошибке
+        // If cached data exists it would come as success; we only get here on real errors.
         _result = null;
       });
 
       if (mounted) {
-        final isNoInternet = e.message?.toLowerCase().contains('интернет') ?? false ||
-            e.message!.toLowerCase().contains('internet') ?? false;
+        final isNoInternet =
+            e.message?.toLowerCase().contains('internet') ?? false;
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              isNoInternet
-                  ? '📶 Нет подключения к интернету'
-                  : 'Ошибка: ${e.message}',
-            ),
-            backgroundColor: isNoInternet ? Colors.orange : Colors.red,
-            duration: const Duration(seconds: 3),
-          ),
+        showFitTopNotice(
+          context,
+          text: isNoInternet ? 'No internet connection' : 'Error: ${e.message}',
+          icon: Icons.error_outline,
         );
       }
     } catch (e, stack) {

@@ -5,7 +5,7 @@ class FeatureFlags {
   const FeatureFlags._();
 
   static const bool onboardingValidationInDebug = false;
-  static const bool lightThemeByDefault = false;
+  static const bool lightThemeByDefault = true;
 
   static bool get shouldValidateOnboarding =>
       !kDebugMode || onboardingValidationInDebug;

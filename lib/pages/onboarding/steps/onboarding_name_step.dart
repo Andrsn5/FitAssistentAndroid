@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fitassistent/common/fit_text_field.dart';
 import 'package:fitassistent/theme/app_theme.dart';
+import 'package:fitassistent/validators/input_constraints.dart';
 
 class OnboardingNameStep extends StatelessWidget {
   const OnboardingNameStep({super.key, required this.controller});
@@ -37,7 +38,13 @@ class OnboardingNameStep extends StatelessWidget {
                 style: TextStyle(color: colors.textPrimary),
               ),
               SizedBox(height: sizes.onboardingNameLabelBottomSpacing),
-              FitTextField(controller: controller, hintText: ''),
+              FitTextField(
+                controller: controller,
+                hintText: '',
+                textInputAction: TextInputAction.next,
+                maxLength: InputConstraints.nameMaxLength,
+                inputFormatters: [InputConstraints.nameFormatter],
+              ),
             ],
           ),
         ),

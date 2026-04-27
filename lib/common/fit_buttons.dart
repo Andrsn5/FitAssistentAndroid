@@ -6,12 +6,16 @@ class FitPrimaryButton extends StatelessWidget {
     super.key,
     required this.text,
     required this.onPressed,
+    this.enabled = true,
+    this.onDisabledPressed,
     this.height,
     this.borderRadius,
   });
 
   final String text;
   final VoidCallback? onPressed;
+  final bool enabled;
+  final VoidCallback? onDisabledPressed;
   final double? height;
   final double? borderRadius;
 
@@ -22,11 +26,12 @@ class FitPrimaryButton extends StatelessWidget {
     final sizes = context.platformSizes;
 
     final radius = borderRadius ?? sizes.commonButtonBorderRadius;
+    final callback = enabled ? onPressed : (onDisabledPressed ?? onPressed);
 
     return SizedBox(
       height: height ?? sizes.buttonHeight,
       child: ElevatedButton(
-        onPressed: onPressed,
+        onPressed: callback,
         style: ElevatedButton.styleFrom(
           backgroundColor: colors.authPrimaryButtonBackground,
           foregroundColor: colors.authPrimaryButtonText,
@@ -47,6 +52,7 @@ class FitSecondaryButton extends StatelessWidget {
     required this.text,
     required this.onPressed,
     this.leading,
+    this.backgroundColor,
     this.height,
     this.borderRadius,
   });
@@ -54,6 +60,7 @@ class FitSecondaryButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;
   final Widget? leading;
+  final Color? backgroundColor;
   final double? height;
   final double? borderRadius;
 
@@ -63,13 +70,14 @@ class FitSecondaryButton extends StatelessWidget {
     final sizes = context.platformSizes;
 
     final radius = borderRadius ?? sizes.commonButtonBorderRadius;
+    final bg = backgroundColor ?? colors.authSecondaryButtonBackground;
 
     return SizedBox(
       height: height ?? sizes.navigationButtonHeight,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: colors.authSecondaryButtonBackground,
+          backgroundColor: bg,
           foregroundColor: colors.authSecondaryButtonText,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(radius),
