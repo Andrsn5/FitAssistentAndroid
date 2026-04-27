@@ -1,9 +1,12 @@
+import 'dart:developer' as developer;
+
 import 'package:flutter/material.dart';
 import 'package:fitassistent/common/feature_flags.dart';
 import 'package:fitassistent/common/fit_top_notice.dart';
 import 'package:fitassistent/common/native_auth_api.dart';
 import 'package:fitassistent/pages/onboarding/onboarding_models.dart';
 import 'package:fitassistent/pages/onboarding/steps/onboarding_about_step.dart';
+import 'package:fitassistent/pages/onboarding/steps/onboarding_activity_step.dart';
 import 'package:fitassistent/pages/onboarding/steps/onboarding_budget_step.dart';
 import 'package:fitassistent/pages/onboarding/steps/onboarding_goal_step.dart';
 import 'package:fitassistent/pages/onboarding/steps/onboarding_name_step.dart';
@@ -27,8 +30,11 @@ class OnboardingPage extends StatefulWidget {
 }
 
 class _OnboardingPageState extends State<OnboardingPage> {
+  static const String _logName = 'OnboardingPage';
+
   final _controller = PageController();
-  final _nameController = TextEditingController();
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
   final _heightController = TextEditingController();
   final _weightController = TextEditingController();
   final _ageController = TextEditingController();
@@ -38,11 +44,13 @@ class _OnboardingPageState extends State<OnboardingPage> {
   OnboardingGender? _gender;
   OnboardingGoal? _goal;
   bool _submitting = false;
+  double _activityLevel = InputConstraints.defaultActivityLevel;
 
   @override
   void dispose() {
     _controller.dispose();
-    _nameController.dispose();
+    _firstNameController.dispose();
+    _lastNameController.dispose();
     _heightController.dispose();
     _weightController.dispose();
     _ageController.dispose();
@@ -54,10 +62,12 @@ class _OnboardingPageState extends State<OnboardingPage> {
     final sizes = context.platformSizes;
 
     if (FeatureFlags.shouldValidateOnboarding) {
-      if (_index == 0 && _nameController.text.trim().isEmpty) {
+      if (_index == 0 &&
+          (_firstNameController.text.trim().isEmpty ||
+              _lastNameController.text.trim().isEmpty)) {
         showFitTopNotice(
           context,
-          text: 'Введите имя',
+          text: 'Введите имя и фамилию',
           icon: Icons.info_outline,
         );
         return;
@@ -91,6 +101,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
         }
       }
       if (_index == 2) {
+        // Activity level is always set to some value.
+      }
+      if (_index == 3) {
         final budget = int.tryParse(_budgetController.text.trim());
         if (budget == null || budget < InputConstraints.minWeeklyBudget) {
           showFitTopNotice(
@@ -101,7 +114,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
           return;
         }
       }
-      if (_index == 3) {
+      if (_index == 4) {
         if (_goal == null) {
           showFitTopNotice(
             context,
@@ -131,10 +144,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
     try {
       final shouldValidate = FeatureFlags.shouldValidateOnboarding;
 
-      final nameRaw = _nameController.text.trim();
-      final parts = nameRaw.split(RegExp(r"\s+")).where((p) => p.isNotEmpty);
-      final firstName = parts.isNotEmpty ? parts.first : 'User';
-      final lastName = parts.length > 1 ? parts.skip(1).join(' ') : 'User';
+      final firstName = _firstNameController.text.trim();
+      final lastName = _lastNameController.text.trim();
 
       final height = int.tryParse(_heightController.text.trim());
       final weight = double.tryParse(
@@ -143,11 +154,32 @@ class _OnboardingPageState extends State<OnboardingPage> {
       final age = int.tryParse(_ageController.text.trim());
       final budget = int.tryParse(_budgetController.text.trim());
 
+      developer.log(
+        'Submit payload (pre-validation): '
+        'email=${widget.email}, '
+        'firstName=$firstName, '
+        'lastName=$lastName, '
+        'heightRaw=${_heightController.text.trim()}, '
+        'weightRaw=${_weightController.text.trim()}, '
+        'ageRaw=${_ageController.text.trim()}, '
+        'budgetRaw=${_budgetController.text.trim()}, '
+        'height=$height, '
+        'weight=$weight, '
+        'age=$age, '
+        'budget=$budget, '
+        'gender=$_gender, '
+        'goal=$_goal, '
+        'activityLevel=$_activityLevel',
+        name: _logName,
+      );
+
       if (shouldValidate) {
         if (height == null ||
             weight == null ||
             age == null ||
             budget == null ||
+            firstName.isEmpty ||
+            lastName.isEmpty ||
             _gender == null ||
             _goal == null) {
           showFitTopNotice(
@@ -165,7 +197,15 @@ class _OnboardingPageState extends State<OnboardingPage> {
       final resolvedBudget = budget ?? InputConstraints.minWeeklyBudget;
 
       final gender = _gender == OnboardingGender.male ? 'MALE' : 'FEMALE';
-      final goal = _goal ?? OnboardingGoal.maintainWeight;
+      final goal = _goal;
+      if (goal == null) {
+        showFitTopNotice(
+          context,
+          text: 'Выберите цель чтобы продолжить',
+          icon: Icons.info_outline,
+        );
+        return;
+      }
       final targetId = OnboardingMappings.targetIdForGoal(goal);
 
       final now = DateTime.now();
@@ -177,12 +217,13 @@ class _OnboardingPageState extends State<OnboardingPage> {
       final ok = await NativeAuthApi.register(
         email: widget.email,
         password: widget.password,
-        firstName: firstName,
-        lastName: lastName,
+        firstName: firstName.isEmpty ? 'User' : firstName,
+        lastName: lastName.isEmpty ? 'User' : lastName,
         weight: resolvedWeight,
         height: resolvedHeight,
         birthDate: birthDateStr,
         gender: gender,
+        activityLevel: _activityLevel,
         targetId: targetId,
         weeklyBudget: resolvedBudget.toDouble(),
       );
@@ -267,9 +308,12 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     onPageChanged: (value) => setState(() => _index = value),
                     physics: const ClampingScrollPhysics(),
                     children: [
-                      OnboardingNameStep(controller: _nameController),
+                      OnboardingNameStep(
+                        firstNameController: _firstNameController,
+                        lastNameController: _lastNameController,
+                      ),
                       OnboardingAboutStep(
-                        nameController: _nameController,
+                        nameController: _firstNameController,
                         heightController: _heightController,
                         weightController: _weightController,
                         ageController: _ageController,
@@ -277,8 +321,13 @@ class _OnboardingPageState extends State<OnboardingPage> {
                         onGenderChanged: (value) =>
                             setState(() => _gender = value),
                       ),
+                      OnboardingActivityStep(
+                        firstNameController: _firstNameController,
+                        value: _activityLevel,
+                        onChanged: (v) => setState(() => _activityLevel = v),
+                      ),
                       OnboardingBudgetStep(
-                        nameController: _nameController,
+                        nameController: _firstNameController,
                         budgetController: _budgetController,
                       ),
                       OnboardingGoalStep(

@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 class FeatureFlags {
   const FeatureFlags._();
 
-  static const bool onboardingValidationInDebug = false;
-  static const bool lightThemeByDefault = true;
+  static const bool onboardingValidationInDebug = true;
+  static const bool lightThemeByDefault = false;
 
   static bool get shouldValidateOnboarding =>
       !kDebugMode || onboardingValidationInDebug;

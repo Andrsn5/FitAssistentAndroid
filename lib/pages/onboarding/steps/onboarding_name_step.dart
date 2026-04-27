@@ -4,9 +4,14 @@ import 'package:fitassistent/theme/app_theme.dart';
 import 'package:fitassistent/validators/input_constraints.dart';
 
 class OnboardingNameStep extends StatelessWidget {
-  const OnboardingNameStep({super.key, required this.controller});
+  const OnboardingNameStep({
+    super.key,
+    required this.firstNameController,
+    required this.lastNameController,
+  });
 
-  final TextEditingController controller;
+  final TextEditingController firstNameController;
+  final TextEditingController lastNameController;
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +44,17 @@ class OnboardingNameStep extends StatelessWidget {
               ),
               SizedBox(height: sizes.onboardingNameLabelBottomSpacing),
               FitTextField(
-                controller: controller,
-                hintText: '',
+                controller: firstNameController,
+                hintText: 'Имя',
                 textInputAction: TextInputAction.next,
+                maxLength: InputConstraints.nameMaxLength,
+                inputFormatters: [InputConstraints.nameFormatter],
+              ),
+              SizedBox(height: sizes.onboardingNameFieldsSpacing),
+              FitTextField(
+                controller: lastNameController,
+                hintText: 'Фамилия',
+                textInputAction: TextInputAction.done,
                 maxLength: InputConstraints.nameMaxLength,
                 inputFormatters: [InputConstraints.nameFormatter],
               ),

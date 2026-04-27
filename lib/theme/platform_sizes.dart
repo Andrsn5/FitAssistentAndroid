@@ -44,7 +44,7 @@ class PlatformSizes {
   static const double _authSocialIconGap = 5;
 
   // Onboarding (layout + navigation)
-  static const int _onboardingPagesCount = 4;
+  static const int _onboardingPagesCount = 5;
   static const double _onboardingCardRadius = 28;
   static const double _onboardingIndicatorDotSize = 10;
   static const double _onboardingIndicatorDotSpacing = 8;
@@ -64,12 +64,17 @@ class PlatformSizes {
   // Onboarding: name step
   static const double _onboardingNameTitleBottomSpacing = 20;
   static const double _onboardingNameLabelBottomSpacing = 10;
+  static const double _onboardingNameFieldsSpacing = 12;
 
   // Onboarding: about step
   static const double _onboardingAboutTitleBottomSpacing = 18;
   static const double _onboardingAboutFieldSpacing = 14;
   static const double _onboardingAboutGenderSpacing = 16;
   static const double _onboardingAboutAfterGenderSpacing = 8;
+
+  // Onboarding: activity step
+  static const double _onboardingActivityAdjustButtonHeight = 48;
+  static const double _onboardingActivityAdjustButtonsSpacing = 12;
 
   // Onboarding: labeled field
   static const double _onboardingFieldLabelFontSize = 16;
@@ -149,12 +154,16 @@ class PlatformSizes {
   // Onboarding: name step
   final double onboardingNameTitleBottomSpacing;
   final double onboardingNameLabelBottomSpacing;
+  final double onboardingNameFieldsSpacing;
 
   // Onboarding: about step
   final double onboardingAboutTitleBottomSpacing;
   final double onboardingAboutFieldSpacing;
   final double onboardingAboutGenderSpacing;
   final double onboardingAboutAfterGenderSpacing;
+
+  final double onboardingActivityAdjustButtonHeight;
+  final double onboardingActivityAdjustButtonsSpacing;
 
   // Onboarding: labeled field
   final double onboardingFieldLabelFontSize;
@@ -225,10 +234,13 @@ class PlatformSizes {
     required this.onboardingTitleFontSize,
     required this.onboardingNameTitleBottomSpacing,
     required this.onboardingNameLabelBottomSpacing,
+    required this.onboardingNameFieldsSpacing,
     required this.onboardingAboutTitleBottomSpacing,
     required this.onboardingAboutFieldSpacing,
     required this.onboardingAboutGenderSpacing,
     required this.onboardingAboutAfterGenderSpacing,
+    required this.onboardingActivityAdjustButtonHeight,
+    required this.onboardingActivityAdjustButtonsSpacing,
     required this.onboardingFieldLabelFontSize,
     required this.onboardingFieldLabelBottomPadding,
     required this.onboardingGoalTitleBottomSpacing,
@@ -295,10 +307,14 @@ class PlatformSizes {
       onboardingTitleFontSize: _onboardingTitleFontSize,
       onboardingNameTitleBottomSpacing: _onboardingNameTitleBottomSpacing,
       onboardingNameLabelBottomSpacing: _onboardingNameLabelBottomSpacing,
+      onboardingNameFieldsSpacing: _onboardingNameFieldsSpacing,
       onboardingAboutTitleBottomSpacing: _onboardingAboutTitleBottomSpacing,
       onboardingAboutFieldSpacing: _onboardingAboutFieldSpacing,
       onboardingAboutGenderSpacing: _onboardingAboutGenderSpacing,
       onboardingAboutAfterGenderSpacing: _onboardingAboutAfterGenderSpacing,
+      onboardingActivityAdjustButtonHeight: _onboardingActivityAdjustButtonHeight,
+      onboardingActivityAdjustButtonsSpacing:
+          _onboardingActivityAdjustButtonsSpacing,
       onboardingFieldLabelFontSize: _onboardingFieldLabelFontSize,
       onboardingFieldLabelBottomPadding: _onboardingFieldLabelBottomPadding,
       onboardingGoalTitleBottomSpacing: _onboardingGoalTitleBottomSpacing,

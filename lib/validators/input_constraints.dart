@@ -3,6 +3,34 @@ import 'package:flutter/services.dart';
 class InputConstraints {
   const InputConstraints._();
 
+  static const List<double> activityLevels = [
+    1,
+    1.2,
+    1.4,
+    1.6,
+    1.8,
+  ];
+
+  static const List<String> activityLevelLabels = [
+    'Малоактивный',
+    'Лёгкая активность',
+    'Умеренный',
+    'Активный',
+    'Очень активный',
+  ];
+
+  static const double defaultActivityLevel = 1;
+
+  static int activityIndexForValue(double value) {
+    final i = activityLevels.indexOf(value);
+    return i < 0 ? 0 : i;
+  }
+
+  static String activityLabelForValue(double value) {
+    final i = activityIndexForValue(value);
+    return activityLevelLabels[i];
+  }
+
   static const int minHeightCm = 50;
   static const int maxHeightCm = 250;
   static const double minWeightKg = 20;

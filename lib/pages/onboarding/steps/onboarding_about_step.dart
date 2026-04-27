@@ -28,8 +28,8 @@ class OnboardingAboutStep extends StatelessWidget {
     final colors = context.platformColors;
     final sizes = context.platformSizes;
 
-    final name = nameController.text.trim();
-    final titleName = name.isEmpty ? 'Имя' : name;
+    final firstName = nameController.text.trim();
+    final titleName = firstName.isEmpty ? 'Имя' : firstName;
     final isMaleSelected = gender == OnboardingGender.male;
     final isFemaleSelected = gender == OnboardingGender.female;
 
