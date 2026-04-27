@@ -94,20 +94,32 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                         ),
                       ),
                       SizedBox(height: sizes.authForgotSpacing),
-                      TextButton(
-                        onPressed: () {},
-                        style: TextButton.styleFrom(
-                          foregroundColor: colors.authLinkTextColor,
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          vertical: sizes.authForgotVerticalPadding,
                         ),
-                        child: Text(
-                          'Забыл пароль',
-                          style: TextStyle(color: colors.textSecondary),
+                        child: Row(
+                          children: [
+                            Spacer(),
+                            Text(
+                              'Забыл пароль',
+                              style: TextStyle(color: colors.textSecondary),
+                            ),
+                            Spacer(),
+                          ],
                         ),
                       ),
-                      FitPrimaryButton(
-                        text: 'Авторизация',
-                        onPressed: () {},
-                      ),
+                      // TextButton(
+                      //   onPressed: () {},
+                      //   // style: TextButton.styleFrom(
+                      //   //   foregroundColor: colors.authLinkTextColor,
+                      //   // ),
+                      //   child: Text(
+                      //     'Забыл пароль',
+                      //     // style: TextStyle(color: colors.textSecondary),
+                      //   ),
+                      // ),
+                      FitPrimaryButton(text: 'Авторизация', onPressed: () {}),
                       SizedBox(height: sizes.authPrimaryToDividerSpacing),
                       Row(
                         children: [
@@ -140,9 +152,27 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                         },
                       ),
                       SizedBox(height: sizes.authSecondaryButtonsSpacing),
-                      FitSecondaryButton(text: 'Через Telegram', onPressed: () {}),
+                      FitSecondaryButton(
+                        text: 'Через Telegram',
+                        leading: SvgPicture.asset(
+                          'lib/image/icons/telegram.svg',
+                          width: sizes.authSocialIconSize,
+                          height: sizes.authSocialIconSize,
+                          fit: BoxFit.contain,
+                        ),
+                        onPressed: () {},
+                      ),
                       SizedBox(height: sizes.authSecondaryButtonsSpacing),
-                      FitSecondaryButton(text: 'Через Google', onPressed: () {}),
+                      FitSecondaryButton(
+                        text: 'Через Google',
+                        leading: SvgPicture.asset(
+                          'lib/image/icons/google.svg',
+                          width: sizes.authSocialIconSize,
+                          height: sizes.authSocialIconSize,
+                          fit: BoxFit.contain,
+                        ),
+                        onPressed: () {},
+                      ),
                     ],
                   ),
                 ),
@@ -154,5 +184,3 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
     );
   }
 }
-
-

@@ -46,12 +46,14 @@ class FitSecondaryButton extends StatelessWidget {
     super.key,
     required this.text,
     required this.onPressed,
+    this.leading,
     this.height,
     this.borderRadius,
   });
 
   final String text;
   final VoidCallback? onPressed;
+  final Widget? leading;
   final double? height;
   final double? borderRadius;
 
@@ -74,7 +76,21 @@ class FitSecondaryButton extends StatelessWidget {
           ),
           elevation: 0,
         ),
-        child: Text(text),
+        child: leading == null
+            ? Text(text)
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    width: sizes.authSocialIconSize,
+                    height: sizes.authSocialIconSize,
+                    child: Center(child: leading),
+                  ),
+                  SizedBox(width: sizes.authSocialIconGap),
+                  Text(text),
+                ],
+              ),
       ),
     );
   }

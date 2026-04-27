@@ -15,6 +15,7 @@ class PlatformSizes {
   static const double _commonButtonBorderRadius = 16;
   static const double _commonFieldPrefixIconSize = 22;
   static const double _commonFieldPrefixIconGap = 10;
+  static const double _authForgotVerticalPadding = 20;
   static const double _commonFieldPrefixIconDy = -1;
 
   // Auth / Registration pages
@@ -31,6 +32,8 @@ class PlatformSizes {
   static const double _authDividerHorizontalPadding = 12;
   static const double _authDividerToSecondarySpacing = 14;
   static const double _authSecondaryButtonsSpacing = 12;
+  static const double _authSocialIconSize = 18;
+  static const double _authSocialIconGap = 5;
 
   // Onboarding (layout + navigation)
   static const int _onboardingPagesCount = 4;
@@ -101,10 +104,13 @@ class PlatformSizes {
   final double authIconToFieldsSpacing;
   final double authFieldsSpacing;
   final double authForgotSpacing;
+  final double authForgotVerticalPadding;
   final double authPrimaryToDividerSpacing;
   final double authDividerHorizontalPadding;
   final double authDividerToSecondarySpacing;
   final double authSecondaryButtonsSpacing;
+  final double authSocialIconSize;
+  final double authSocialIconGap;
 
   // Onboarding (layout + navigation)
   final int onboardingPagesCount;
@@ -153,6 +159,7 @@ class PlatformSizes {
     required this.buttonHeight,
     required this.inputFieldHeight,
     required this.recomendationBlockHeight,
+    required this.authForgotVerticalPadding,
     required this.profileIconSize,
     required this.navigationButtonHeight,
     required this.slideBarToggleSize,
@@ -176,6 +183,8 @@ class PlatformSizes {
     required this.authDividerHorizontalPadding,
     required this.authDividerToSecondarySpacing,
     required this.authSecondaryButtonsSpacing,
+    required this.authSocialIconSize,
+    required this.authSocialIconGap,
     required this.onboardingPagesCount,
     required this.onboardingCardRadius,
     required this.onboardingIndicatorDotSize,
@@ -210,6 +219,7 @@ class PlatformSizes {
   factory PlatformSizes.standard() {
     return const PlatformSizes(
       buttonHeight: _buttonHeight,
+      authForgotVerticalPadding: _authForgotVerticalPadding,
       inputFieldHeight: _inputFieldHeight,
       recomendationBlockHeight: _recomendationBlockHeight,
       profileIconSize: _profileIconSize,
@@ -235,6 +245,8 @@ class PlatformSizes {
       authDividerHorizontalPadding: _authDividerHorizontalPadding,
       authDividerToSecondarySpacing: _authDividerToSecondarySpacing,
       authSecondaryButtonsSpacing: _authSecondaryButtonsSpacing,
+      authSocialIconSize: _authSocialIconSize,
+      authSocialIconGap: _authSocialIconGap,
       onboardingPagesCount: _onboardingPagesCount,
       onboardingCardRadius: _onboardingCardRadius,
       onboardingIndicatorDotSize: _onboardingIndicatorDotSize,
