@@ -105,7 +105,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         },
                       ),
                       SizedBox(height: sizes.authSecondaryButtonsSpacing),
-                      FitSecondaryButton(
+                      FitSecondaryEmphasisButton(
                         text: 'Назад',
                         onPressed: () => Navigator.of(context).pop(),
                       ),

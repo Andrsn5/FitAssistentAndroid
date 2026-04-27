@@ -52,11 +52,13 @@ class PlatformTextStyles {
   final TextStyle headerTextStyle;
   final TextStyle h2SemiBold;
   final TextStyle authPrimaryButtonTextStyle;
+  final TextStyle authSecondaryEmphasisButtonTextStyle;
 
   const PlatformTextStyles({
     required this.headerTextStyle,
     required this.h2SemiBold,
     required this.authPrimaryButtonTextStyle,
+    required this.authSecondaryEmphasisButtonTextStyle,
   });
 
   static const double _h2FontSize = 16;
@@ -81,6 +83,9 @@ class PlatformTextStyles {
       h2SemiBold: h2SemiBold,
       authPrimaryButtonTextStyle: AuthPrimaryButtonTextStyle.resolve(
         color: platformColors.authPrimaryButtonText,
+      ),
+      authSecondaryEmphasisButtonTextStyle: AuthPrimaryButtonTextStyle.resolve(
+        color: platformColors.authSecondaryButtonText,
       ),
     );
   }

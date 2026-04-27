@@ -80,6 +80,46 @@ class FitSecondaryButton extends StatelessWidget {
   }
 }
 
+class FitSecondaryEmphasisButton extends StatelessWidget {
+  const FitSecondaryEmphasisButton({
+    super.key,
+    required this.text,
+    required this.onPressed,
+    this.height,
+    this.borderRadius,
+  });
+
+  final String text;
+  final VoidCallback? onPressed;
+  final double? height;
+  final double? borderRadius;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.platformColors;
+    final styles = context.platformTextStyles;
+    final sizes = context.platformSizes;
+
+    final radius = borderRadius ?? sizes.commonButtonBorderRadius;
+
+    return SizedBox(
+      height: height ?? sizes.navigationButtonHeight,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: colors.authSecondaryButtonBackground,
+          foregroundColor: colors.authSecondaryButtonText,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(radius),
+          ),
+          elevation: 0,
+        ),
+        child: Text(text, style: styles.authSecondaryEmphasisButtonTextStyle),
+      ),
+    );
+  }
+}
+
 class FitSelectablePillButton extends StatelessWidget {
   const FitSelectablePillButton({
     super.key,
